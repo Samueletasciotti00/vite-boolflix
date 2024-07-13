@@ -55,13 +55,39 @@ export default {
 
       // ora prendiamo le immagini e stampiamole in pagina
       getImageUrl(posterPath) {
+
           const baseUrl = 'https://image.tmdb.org/t/p/';
-          const size = 'w342'; // You can change the size according to your needs
-          return `${baseUrl}${size}${posterPath}`;
+          const size = 'w342'; // Size img
+          return `${baseUrl}${size}${posterPath}`; //Url completo
+      },
+
+      // Creare un funzione per la votazione in stelle
+      getStarVote(vote_average) {
+        
+        let a = Math.ceil(vote_average) / 2;
+        a = Math.ceil(a);
+
+        if(a == 0) {
+          return '<i class="fa-solid fa-poo"></i>';
+        } else if (a == 1) {
+          return '<i class="fa-solid fa-star"></i>'
+        } else if (a == 2) {
+          return '<i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i>'
+        } else if (a == 3) {
+          return '<i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star">';
+        } else if (a == 4) {
+          return '<i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i>'
+        } else if (a == 5){
+          return '<i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i>'
         }
+
+        console.log(a);
+      }
+
     },
     created() {
       this.getInfo();
+      this.getStarVote();
     }
 } 
 
@@ -70,7 +96,7 @@ export default {
 <template>
 
     <!-- Header -->
-    <AppHeader @search="getInfo" @keyup.enter="getInfo"/>
+    <AppHeader @search="getInfo " @keyup.enter="getInfo"/>
     
     <!-- Lista film -->
     <div v-if="store.loading"><h1>Caricamento...</h1></div>
@@ -79,15 +105,24 @@ export default {
     <!-- Elenco film -->
     <h2>Films</h2>
     <ul>
-      <li v-for="movie in store.movieList" :key="movie.id"> <span>TITLE :</span> {{ movie.title }} <span>ORIGINAL_TITLE :</span> {{ movie.original_title }} <span>LENG : </span>
-      <div class="inline" v-html="store.flagger"></div> <span>VOTE :</span>  {{movie.vote_average}} <span> IMG : </span> <img :src="getImageUrl(movie.poster_path)" alt=""></li>
-    </ul>
+      <li v-for="movie in store.movieList" :key="movie.id">
+         <span> TITLE :</span> {{ movie.title }} 
+         <span> ORIGINAL_TITLE :</span> {{ movie.original_title }} 
+         <span> LENG : </span><div class="inline" v-html="store.flagger"></div> 
+         <span> VOTE :</span>  <span v-html="getStarVote(movie.vote_average)"></span> 
+         <span> IMG : </span> <img :src="getImageUrl(movie.poster_path)" alt="">
+      </li>
+    </ul> 
 
     <!-- Elenco seires -->
     <h2>Series</h2>
     <ul>
-       <li v-for="serie in store.seriesList" :key="serie.id"> <span>NAME :</span> {{ serie.name }} <span>ORIGINAL_NAME :</span> {{ serie.original_name }} <span>LENG : </span>
-      <div class="inline" v-html="store.flagger"></div> <span>VOTE :</span>  {{serie.vote_average}} </li>
+       <li v-for="serie in store.seriesList" :key="serie.id">
+         <span>NAME :</span> {{ serie.name }} 
+         <span>ORIGINAL_NAME :</span> {{ serie.original_name }} 
+         <span>LENG : </span><div class="inline" v-html="store.flagger"></div> 
+         <span>VOTE :</span> <span v-html="getStarVote(serie.vote_average)"></span> 
+      </li>
     </ul>
 </template>
 
