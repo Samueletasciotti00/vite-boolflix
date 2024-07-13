@@ -8,7 +8,5 @@ export const store = reactive({
     loading: false,
     searchText: '',
     apiNameParam: '&query=',
-    flagConverter: [],
-    flagger: '<i class="fa-solid fa-flag"></i>'
 }); 
 

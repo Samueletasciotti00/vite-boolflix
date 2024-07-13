@@ -80,8 +80,23 @@ export default {
         } else if (a == 5){
           return '<i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i>'
         }
+      },
 
-        console.log(a);
+      // Convertiamo le bandiere
+      getFlag(original_language) {
+        if(original_language == 'en') {
+          return '🏴󠁧󠁢󠁥󠁮󠁧󠁿';
+        } else if (original_language == 'it') {
+          return '🇮🇹';
+        } else if (original_language == 'sp') {
+          return '🇪🇸';
+        } else if (original_language == 'ja') {
+          return '🇯🇵';
+        } else if (original_language == 'de') {
+          return '🇩🇪';
+        } else if (original_language == 'fr') {
+          return '🇫🇷';
+        }
       }
 
     },
@@ -96,8 +111,11 @@ export default {
 <template>
 
     <!-- Header -->
-    <AppHeader @search="getInfo " @keyup.enter="getInfo"/>
+    <div class="head">
+       <AppHeader @search="getInfo " @keyup.enter="getInfo"/>
     
+    </div>
+   
     <!-- Lista film -->
     <div v-if="store.loading"><h1>Caricamento...</h1></div>
 
@@ -105,30 +123,46 @@ export default {
     <!-- Elenco film -->
     <h2>Films</h2>
     <ul>
-      <li v-for="movie in store.movieList" :key="movie.id">
-         <span> TITLE :</span> {{ movie.title }} 
-         <span> ORIGINAL_TITLE :</span> {{ movie.original_title }} 
-         <span> LENG : </span><div class="inline" v-html="store.flagger"></div> 
-         <span> VOTE :</span>  <span v-html="getStarVote(movie.vote_average)"></span> 
-         <span> IMG : </span> <img :src="getImageUrl(movie.poster_path)" alt="">
-      </li>
+        <li v-for="movie in store.movieList" :key="movie.id">
+          <span class="type"> TITLE :</span> {{ movie.title }} 
+          <span class="type"> ORIGINAL_TITLE :</span> {{ movie.original_title }} 
+          <span class="type"> LANG : </span><div class="inline" v-html="getFlag(movie.original_language)"></div> 
+          <span class="type"> VOTE :</span>  <span v-html="getStarVote(movie.vote_average)"></span> 
+          <span class="type"> IMG : </span> <img :src="getImageUrl(movie.poster_path)" alt="">
+        </li>
     </ul> 
 
     <!-- Elenco seires -->
     <h2>Series</h2>
     <ul>
        <li v-for="serie in store.seriesList" :key="serie.id">
-         <span>NAME :</span> {{ serie.name }} 
-         <span>ORIGINAL_NAME :</span> {{ serie.original_name }} 
-         <span>LENG : </span><div class="inline" v-html="store.flagger"></div> 
-         <span>VOTE :</span> <span v-html="getStarVote(serie.vote_average)"></span> 
+         <span class="type hide">NAME :</span> {{ serie.name }} 
+         <span class="type hide">ORIGINAL_NAME :</span> {{ serie.original_name }} 
+         <span class="type hide">LANG : </span><div class="inline" v-html="getFlag(serie.original_language)"></div> 
+         <span class="type hide">VOTE :</span> <span v-html="getStarVote(serie.vote_average)"></span> 
+         <span class="type hide"> IMG : </span> <img :src="getImageUrl(serie.poster_path)" alt="">
       </li>
     </ul>
 </template>
 
-<style scoped>
-span{
+<style >
+template{
+  display: flex;
+  align-items: center;
+}
+
+body{
+  background-color: gray;
+}
+
+.type{
   color: red;
+}
+
+.type.hide
+
+span i{
+  color: #ffffff;
 }
 
 .inline{
@@ -136,6 +170,28 @@ span{
 }
 
 img{
-  width: 5%;
+  width: 50%;
+}
+
+ul{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  margin: 30px auto;
+}
+
+li{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid red;
+  color: #ffffff;
+  background-color: black;
+  width: 300px;
+}
+
+.head{
+  background-color: black;
+  padding: 20px;
 }
 </style>
