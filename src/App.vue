@@ -119,30 +119,50 @@ export default {
     <!-- Lista film -->
     <div v-if="store.loading"><h1>Caricamento...</h1></div>
 
+    <div class="content">
+        <!-- Elenco film -->
+        <h2>Films</h2>
+        <ul>
+            <li v-for="movie in store.movieList" :key="movie.id">
+              <div class="back">
 
-    <!-- Elenco film -->
-    <h2>Films</h2>
-    <ul>
-        <li v-for="movie in store.movieList" :key="movie.id">
-          <span class="type"> TITLE :</span> {{ movie.title }} 
-          <span class="type"> ORIGINAL_TITLE :</span> {{ movie.original_title }} 
-          <span class="type"> LANG : </span><div class="inline" v-html="getFlag(movie.original_language)"></div> 
-          <span class="type"> VOTE :</span>  <span v-html="getStarVote(movie.vote_average)"></span> 
-          <span class="type"> IMG : </span> <img :src="getImageUrl(movie.poster_path)" alt="">
-        </li>
-    </ul> 
+                   <div class="hide"><span class="type"> TITLE :</span> {{ movie.title }}</div> 
+                  <div class="hide"><span class="type"> ORIGINAL_TITLE :</span> {{ movie.original_title }}</div> 
+                  <div class="hide"><span class="type"> LANG : </span><div class="inline" v-html="getFlag(movie.original_language)"></div></div> 
+                  <div class="hide"><span class="type"> VOTE :</span>  <span v-html="getStarVote(movie.vote_average)"></span></div> 
+              </div>
+               
 
-    <!-- Elenco seires -->
-    <h2>Series</h2>
-    <ul>
-       <li v-for="serie in store.seriesList" :key="serie.id">
-         <span class="type hide">NAME :</span> {{ serie.name }} 
-         <span class="type hide">ORIGINAL_NAME :</span> {{ serie.original_name }} 
-         <span class="type hide">LANG : </span><div class="inline" v-html="getFlag(serie.original_language)"></div> 
-         <span class="type hide">VOTE :</span> <span v-html="getStarVote(serie.vote_average)"></span> 
-         <span class="type hide"> IMG : </span> <img :src="getImageUrl(serie.poster_path)" alt="">
-      </li>
-    </ul>
+              <!-- Copertina Immagine -->
+              <div class="front">
+                <img :src="getImageUrl(movie.poster_path)" alt="Poster Immage">
+              </div>
+              
+            </li>
+        </ul> 
+
+        <!-- Elenco seires -->
+        <h2>Series</h2>
+        <ul>
+          <li v-for="serie in store.seriesList" :key="serie.id">
+
+            <div class="back">
+                <div class="hide"><span class="type">NAME :</span> {{ serie.name }}</div> 
+              <div class="hide"><span class="type">ORIGINAL_NAME :</span> {{ serie.original_name }}</div> 
+              <div class="hide"><span class="type">LANG : </span><div class="inline" v-html="getFlag(serie.original_language)"></div></div> 
+              <div class="hide"><span class="type">VOTE :</span> <span v-html="getStarVote(serie.vote_average)"></span> </div>
+            </div>
+            
+
+            <!-- Copertina Immagine -->
+            <div class="front">
+              <img :src="getImageUrl(serie.poster_path)" alt="Poster Immage">
+            </div>
+            
+          </li>
+        </ul>
+    </div>
+        
 </template>
 
 <style >
@@ -151,15 +171,52 @@ template{
   align-items: center;
 }
 
-body{
-  background-color: gray;
+h2{
+  color: #ffffff;
+}
+
+/* Contenitore per mantenere la prospettiva 3D */
+li{
+  width: 250px;
+  height: 400px; /* Altezza aggiunta per migliorare la visibilità della rotazione */
+  perspective: 1000px;
+}
+
+.front, .back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  transition: transform 0.6s;
+}
+
+.front {
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: #ffffff;
+  padding: 20px;
+}
+
+/* Rotazione dell'elemento li al passaggio del mouse */
+li:hover .front {
+  transform: rotateY(-180deg);
+}
+
+li:hover .back {
+  transform: rotateY(0deg);
 }
 
 .type{
   color: red;
 }
-
-.type.hide
 
 span i{
   color: #ffffff;
@@ -170,28 +227,33 @@ span i{
 }
 
 img{
-  width: 50%;
+  width: 100%;
+}
+
+.content{
+  padding: auto;
+  text-align: center;
+  color: black;
 }
 
 ul{
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
-  margin: 30px auto;
+  gap: 5px;
 }
 
 li{
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  border: 1px solid red;
-  color: #ffffff;
+  position: relative;
   background-color: black;
-  width: 300px;
+  color: #ffffff;
 }
 
 .head{
   background-color: black;
   padding: 20px;
 }
+
 </style>
